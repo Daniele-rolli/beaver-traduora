@@ -4,4 +4,4 @@ You've been granted access to the project '{{user.project.name}}' on Traduora wi
 
 To get started, go to {{virtualHost}}/projects/{{user.project.id}} and login with your email and password.
 
-Traduora's Team
+Beaver's Team

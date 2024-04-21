@@ -86,7 +86,7 @@ export default class ProjectLabelController {
     await this.auth.authorizeProjectAction(user, projectId, ProjectAction.EditLabel);
     await this.labelRepo.findOneOrFail({ where: { id: labelId, project: { id: projectId } } });
     await this.labelRepo.update({ id: labelId }, payload);
-    const label = await this.labelRepo.findOneOrFail({ id: labelId });
+    const label = await this.labelRepo.findOneByOrFail({ id: labelId });
 
     return {
       data: {
@@ -107,7 +107,7 @@ export default class ProjectLabelController {
   async delete(@Req() req, @Param('projectId') projectId: string, @Param('labelId') labelId: string) {
     const user = this.auth.getRequestUserOrClient(req);
     const membership = await this.auth.authorizeProjectAction(user, projectId, ProjectAction.DeleteLabel);
-    const label = await this.labelRepo.findOneOrFail(labelId, { where: { project: membership.project } });
+    const label = await this.labelRepo.findOneOrFail({ where: { id: labelId, project: membership.project } });
     await this.labelRepo.remove(label);
   }
 
@@ -122,8 +122,8 @@ export default class ProjectLabelController {
     const user = this.auth.getRequestUserOrClient(req);
     const membership = await this.auth.authorizeProjectAction(user, projectId, ProjectAction.EditLabel);
 
-    const label = await this.labelRepo.findOneOrFail(labelId, { where: { project: membership.project } });
-    const term = await this.termsRepo.findOneOrFail(termId, { where: { project: membership.project }, relations: ['labels'] });
+    const label = await this.labelRepo.findOneOrFail({ where: { id: labelId, project: membership.project } });
+    const term = await this.termsRepo.findOneOrFail({ where: { id: termId, project: membership.project }, relations: ['labels'] });
 
     term.labels.push(label);
 
@@ -149,8 +149,8 @@ export default class ProjectLabelController {
     const user = this.auth.getRequestUserOrClient(req);
     const membership = await this.auth.authorizeProjectAction(user, projectId, ProjectAction.EditLabel);
 
-    const label = await this.labelRepo.findOneOrFail(labelId, { where: { project: membership.project } });
-    const term = await this.termsRepo.findOneOrFail(termId, { where: { project: membership.project }, relations: ['labels'] });
+    const label = await this.labelRepo.findOneOrFail({ where: { id: labelId, project: membership.project } });
+    const term = await this.termsRepo.findOneOrFail({ where: { id: termId, project: membership.project }, relations: ['labels'] });
 
     term.labels = term.labels.filter(t => t.id !== label.id);
 
@@ -174,7 +174,7 @@ export default class ProjectLabelController {
     const user = this.auth.getRequestUserOrClient(req);
     const membership = await this.auth.authorizeProjectAction(user, projectId, ProjectAction.EditLabel);
 
-    const label = await this.labelRepo.findOneOrFail(labelId, { where: { project: membership.project } });
+    const label = await this.labelRepo.findOneOrFail({ where: { id: labelId, project: membership.project } });
 
     const projectLocale = await this.projectLocaleRepo.findOneOrFail({
       where: {
@@ -212,7 +212,7 @@ export default class ProjectLabelController {
     const user = this.auth.getRequestUserOrClient(req);
     const membership = await this.auth.authorizeProjectAction(user, projectId, ProjectAction.EditLabel);
 
-    const label = await this.labelRepo.findOneOrFail(labelId, { where: { project: membership.project } });
+    const label = await this.labelRepo.findOneOrFail({ where: { id: labelId, project: membership.project } });
 
     const projectLocale = await this.projectLocaleRepo.findOneOrFail({
       where: {

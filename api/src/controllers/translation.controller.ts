@@ -68,7 +68,7 @@ export default class TranslationController {
     const user = this.auth.getRequestUserOrClient(req);
     const membership = await this.auth.authorizeProjectAction(user, projectId, ProjectAction.AddTranslation, 0, 1);
 
-    const locale = await this.localeRepo.findOne({ code: payload.code });
+    const locale = await this.localeRepo.findOneBy({ code: payload.code });
 
     if (!locale) {
       throw new NotFoundException('unknown locale code');
@@ -94,7 +94,7 @@ export default class TranslationController {
       await entityManager.increment(Project, { id: membership.project.id }, 'localesCount', 1);
     });
 
-    const result = await this.projectLocaleRepo.findOneOrFail({
+    const result = await this.projectLocaleRepo.findOneByOrFail({
       locale,
       project: membership.project,
     });
